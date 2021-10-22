@@ -36,12 +36,15 @@ protected:
 private:
     Ui::MainWindow *ui;
 
-    QGraphicsScene *Nivel1;
+    QGraphicsScene *Nivel1, *Nivel2;
 
     personaje *astronauta;
     QGraphicsRectItem *level1;
 
+    int seconds = 0;
+
 public slots:
     void Level1();
+    void conector();
 };
 #endif // MAINWINDOW_H

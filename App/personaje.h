@@ -20,7 +20,7 @@ public:
 
     float ancho, alto;
 
-    int pos_x = 0, pos_y = 0;
+    int pos_x = 400, pos_y = 400, vidas = 3, puntos = 0;
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
