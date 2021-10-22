@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTimer>
 #include <QGraphicsScene>
 #include <QPainter>
 #include <QGraphicsItem>
@@ -38,5 +39,9 @@ private:
     QGraphicsScene *Nivel1;
 
     personaje *astronauta;
+    QGraphicsRectItem *level1;
+
+public slots:
+    void Level1();
 };
 #endif // MAINWINDOW_H
