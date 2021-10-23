@@ -38,10 +38,10 @@ private:
 
     QGraphicsScene *Nivel1, *Nivel2;
 
-    personaje *astronauta;
+    personaje *astronauta, *nave;
     QGraphicsRectItem *level1;
 
-    int seconds = 0;
+    int seconds = 0, nivel = 1;
 
 public slots:
     void Level1();

@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>Sprites Personajes/Player1_Mov.png</file>
+        <file>Sprites Personajes/Nave.png</file>
     </qresource>
 </RCC>

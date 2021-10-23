@@ -11,14 +11,29 @@ MainWindow::MainWindow(QWidget *parent)
     Nivel1 = new QGraphicsScene;
     Nivel2 = new QGraphicsScene;
     astronauta = new personaje();
+    nave = new personaje(1);
     level1 = new QGraphicsRectItem();
 
-    level1 = Nivel1->addRect(0,0,80,80, QPen(QColor(1,1,1)), QImage("../TheSpaceBattle/App/Sprites Personajes/Circuito.jpg"));
+    //Nivel 1 //
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    /*level1 = Nivel1->addRect(0,0,80,80, QPen(QColor(1,1,1)), QImage("../TheSpaceBattle/App/Sprites Personajes/Circuito.jpg"));
     Nivel1->addItem(astronauta);
     astronauta->setPos(400,400);
     Nivel1->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/Galaxia.jpg"));
 
     ui->graphicsView->setScene(Nivel1);
+    ui->graphicsView->setSceneRect(400,400,10,10);
+    ui->graphicsView->show();*/
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    nivel = 2;
+    Nivel2->addItem(nave);
+    nave->setPos(55,400);
+    nave->pos_x = 55;
+    nave->pos_y = 400;
+
+    ui->graphicsView->setScene(Nivel2);
     ui->graphicsView->setSceneRect(400,400,10,10);
     ui->graphicsView->show();
 
@@ -42,15 +57,17 @@ void MainWindow::conector()
     seconds++;
     ui->lcdNumber->display(astronauta->vidas);
     ui->lcdNumber_2->display(astronauta->puntos);
-    if(seconds == 3500 or astronauta->collidesWithItem(level1)){
-        Level1();
-        if(seconds == 3500){
-            astronauta->vidas--;
+    if(nivel == 1){
+        if(seconds == 3500 or astronauta->collidesWithItem(level1)){
+            Level1();
+            if(seconds == 3500){
+                astronauta->vidas--;
+            }
+            else{
+                astronauta->puntos+=100;
+            }
+            seconds = 0;
         }
-        else{
-            astronauta->puntos+=100;
-        }
-        seconds = 0;
     }
 }
 
@@ -63,29 +80,41 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
 {
         switch (e->key()) {
         case Qt::Key_A:
-            astronauta->setPos(astronauta->pos_x-=10, astronauta->pos_y);
-            if(astronauta->pos_x == 50){
-                astronauta->setPos(astronauta->pos_x+=10, astronauta->pos_y);
+            if(nivel != 2){
+                astronauta->setPos(astronauta->pos_x-=10, astronauta->pos_y);
+                if(astronauta->pos_x == 50){
+                    astronauta->setPos(astronauta->pos_x+=10, astronauta->pos_y);
+                }
+                astronauta->direccion(1);
             }
-            astronauta->direccion(1);
             break;
         case Qt::Key_S:
             astronauta->setPos(astronauta->pos_x, astronauta->pos_y+=10);
             if(astronauta->pos_y == 750){
                 astronauta->setPos(astronauta->pos_x, astronauta->pos_y-=10);
             }
+            nave->setPos(nave->pos_x, nave->pos_y+=10);
+            if(nave->pos_y == 750){
+                nave->setPos(nave->pos_x, nave->pos_y-=10);
+            }
             break;
         case Qt::Key_D:
-            astronauta->setPos(astronauta->pos_x+=10, astronauta->pos_y);
-            if(astronauta->pos_x == 750){
-                astronauta->setPos(astronauta->pos_x-=10, astronauta->pos_y);
+            if(nivel != 2){
+                astronauta->setPos(astronauta->pos_x+=10, astronauta->pos_y);
+                if(astronauta->pos_x == 750){
+                    astronauta->setPos(astronauta->pos_x-=10, astronauta->pos_y);
+                }
+                astronauta->direccion(0);
             }
-            astronauta->direccion(0);
             break;
         case Qt::Key_W:
             astronauta->setPos(astronauta->pos_x, astronauta->pos_y-=10);
             if(astronauta->pos_y == 50){
                 astronauta->setPos(astronauta->pos_x, astronauta->pos_y+=10);
+            }
+            nave->setPos(nave->pos_x, nave->pos_y-=10);
+            if(nave->pos_y == 50){
+                nave->setPos(nave->pos_x, nave->pos_y+=10);
             }
             break;
         default:

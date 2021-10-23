@@ -11,7 +11,7 @@ class personaje : public QObject, public QGraphicsItem
 {
     Q_OBJECT
 public:
-    explicit personaje(QObject *parent = nullptr);
+    explicit personaje(int prueba = 0, QObject *parent = nullptr);
 
     QTimer *timer;
     QPixmap *pixmap;
@@ -24,7 +24,7 @@ public:
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    void direccion(int direc);
+    void direccion(int direc = 0);
 
 
 signals:

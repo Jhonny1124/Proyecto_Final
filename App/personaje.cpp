@@ -1,12 +1,18 @@
 #include "personaje.h"
 
-personaje::personaje(QObject *parent) : QObject(parent)
+personaje::personaje(int prueba, QObject *parent) : QObject(parent)
 {
     timer = new QTimer();
 
     filas = 0, columnas = 0;
 
-    pixmap = new QPixmap(":/Sprites Personajes/Player1_Mov.png");
+    if(prueba == 0){
+        pixmap = new QPixmap(":/Sprites Personajes/Player1_Mov.png");
+    }
+    else{
+        pixmap = new QPixmap(":/Sprites Personajes/Nave.png");
+    }
+
 
     ancho = 100;
     alto = 100;
