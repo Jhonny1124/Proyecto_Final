@@ -16,6 +16,7 @@
 #include <QKeyEvent>
 #include <QRandomGenerator>
 #include <QDebug>
+#include <QtMath>
 #include "personaje.h"
 
 QT_BEGIN_NAMESPACE
@@ -40,11 +41,16 @@ private:
 
     personaje *astronauta, *nave;
     QGraphicsRectItem *level1;
+    std::array<QGraphicsEllipseItem *, 55> meteoritos;
 
-    int seconds = 0, nivel = 1;
+    int seconds = 0, nivel = 1, index = -1, prueba = 0;
+
+    float grados[55];
 
 public slots:
     void Level1();
+    void Level2();
+    void MovMeteoritos();
     void conector();
 };
 #endif // MAINWINDOW_H

@@ -29,9 +29,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     nivel = 2;
     Nivel2->addItem(nave);
+    Nivel2->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/Galaxia.jpg"));
     nave->setPos(55,400);
     nave->pos_x = 55;
     nave->pos_y = 400;
+
+    for(int g = 0; g < 55; g++){
+        grados[g] = 0;
+    }
 
     ui->graphicsView->setScene(Nivel2);
     ui->graphicsView->setSceneRect(400,400,10,10);
@@ -49,7 +54,31 @@ void MainWindow::Level1()
     ran_x = QRandomGenerator::global()->bounded(710);
     ran_y = QRandomGenerator::global()->bounded(710);
     level1->setPos(ran_x,ran_y);
-    qDebug() << ran_x << ", " << ran_y << Qt::endl;
+}
+
+void MainWindow::Level2()
+{
+    index++;
+
+    meteoritos.at(index) = Nivel2->addEllipse(720,QRandomGenerator::global()->bounded(710),90,90, QPen(QColor(1,1,1)), QImage("../TheSpaceBattle/App/Sprites Personajes/Meteorito.jpg"));
+
+    prueba++;
+
+}
+
+void MainWindow::MovMeteoritos()
+{
+
+    for(int i = 0; i < prueba; i++){
+        if(meteoritos.at(i) != NULL){
+            meteoritos.at(i)->setPos(meteoritos.at(i)->pos().x()-0.3,70*qSin(qDegreesToRadians(grados[i]))-(meteoritos.at(i)->pos().y()));
+            grados[i]++;
+            if(meteoritos.at(i)->pos().x() < -810){
+                Nivel2->removeItem(meteoritos.at(i));
+                meteoritos.at(i) = NULL;
+            }
+        }
+    }
 }
 
 void MainWindow::conector()
@@ -66,6 +95,14 @@ void MainWindow::conector()
             else{
                 astronauta->puntos+=100;
             }
+            seconds = 0;
+        }
+    }
+    else if(nivel == 2){
+        if(prueba > 0 and seconds%2 == 0)
+            MovMeteoritos();
+        if(seconds == 1000 and index < 54){
+            Level2();
             seconds = 0;
         }
     }
