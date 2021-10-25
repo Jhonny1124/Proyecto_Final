@@ -18,6 +18,7 @@
 #include <QDebug>
 #include <QtMath>
 #include "personaje.h"
+#include "laser.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -40,17 +41,24 @@ private:
     QGraphicsScene *Nivel1, *Nivel2;
 
     personaje *astronauta, *nave;
+    Laser *laser;
     QGraphicsRectItem *level1;
     std::array<QGraphicsEllipseItem *, 55> meteoritos;
+    std::array<QGraphicsEllipseItem *, 10> cometas;
 
-    int seconds = 0, nivel = 1, index = -1, prueba = 0;
+    int seconds = 0, nivel = 1, indexm = -1, pruebam = 0, cont = 0;
+
+    int indexc = -1, pruebac = 0;
+    float t = 0;
 
     float grados[55];
+    float velocidad[10];
 
 public slots:
     void Level1();
-    void Level2();
+    void Level2(int);
     void MovMeteoritos();
+    void MovCometas();
     void conector();
 };
 #endif // MAINWINDOW_H
