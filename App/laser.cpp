@@ -11,7 +11,7 @@ Laser::Laser(QObject *parent) : QObject(parent)
     ancho = 800;
     alto = 100;
 
-    timer->start(200);
+    timer->start(150);
     connect(timer, &QTimer::timeout, this, &Laser::Movimiento);
 }
 
@@ -27,9 +27,8 @@ void Laser::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 
 void Laser::Movimiento()
 {
-    columnas +=100;
-    if(columnas >= 800){
-        columnas = 0;
+    if(columnas < 8000){
+       columnas +=800;
     }
     this->update(-ancho/2, -alto/2, ancho, alto);
 }

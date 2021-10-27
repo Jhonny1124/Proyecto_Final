@@ -10,10 +10,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     Nivel1 = new QGraphicsScene;
     Nivel2 = new QGraphicsScene;
+    Nivel3 = new QGraphicsScene;
     astronauta = new personaje();
     nave = new personaje(1);
     level1 = new QGraphicsRectItem();
     laser = new Laser();
+    boss = new Boss();
 
     //Nivel 1 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,13 +24,16 @@ MainWindow::MainWindow(QWidget *parent)
     astronauta->setPos(400,400);
     Nivel1->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/Galaxia.jpg"));
 
-    ui->graphicsView->setScene(Nivel1);
-    ui->graphicsView->setSceneRect(400,400,10,10);
-    ui->graphicsView->show();*/
+    ui->graphicsView->setScene(Nivel1);*/
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    nivel = 2;
+    //Nivel 2//
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /*nivel = 2;
     Nivel2->addItem(nave);
     Nivel2->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/Galaxia.jpg"));
     nave->setPos(55,400);
@@ -42,7 +47,23 @@ MainWindow::MainWindow(QWidget *parent)
         velocidad[v] = 85*qSin(qDegreesToRadians(30.0));
     }
 
-    ui->graphicsView->setScene(Nivel2);
+    ui->graphicsView->setScene(Nivel2);*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    Nivel3->addItem(boss);
+    Nivel3->addItem(nave);
+    Nivel3->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/Galaxia.jpg"));
+    nivel = 3;
+    nave->setPos(55,400);
+    nave->pos_x = 55;
+    nave->pos_y = 400;
+    boss->setPos(650,400);
+
+    for(int g = 0; g < 7; g++){
+        grados_boss[g] = 0;
+    }
+
+    ui->graphicsView->setScene(Nivel3);
 
     ui->graphicsView->setSceneRect(400,400,10,10);
     ui->graphicsView->show();
@@ -119,6 +140,44 @@ void MainWindow::MovCometas()
     }
 }
 
+void MainWindow::MovMiniBoss()
+{
+    for(int i = 0; i < orbita; i++){
+        mini.at(i)->setPos( -200*qCos(qDegreesToRadians(grados_boss[i]))+623, 200*qSin(qDegreesToRadians(grados_boss[i]))+373);
+        grados_boss[i]++;
+    }
+
+}
+
+void MainWindow::MovBoss()
+{
+    static int y = 373;
+
+    if(y == 653){
+        direccion = 1;
+    }
+    if(y == 163){
+        direccion = 0;
+    }
+    if(direccion == 0){
+        y+=10;
+    }
+    else{
+        y-=10;
+    }
+    for(int i = 0; i < orbita; i++){
+        mini.at(i)->setPos( -200*qCos(qDegreesToRadians(grados_boss[i]))+623, 200*qSin(qDegreesToRadians(grados_boss[i]))+y);
+        grados_boss[i]++;
+    }
+    boss->setPos(boss->pos().x(),y);
+}
+
+void MainWindow::MovDisparo()
+{
+    shot->posx+=10;
+    shot->setPos(shot->posx, shot->posy);
+}
+
 
 void MainWindow::conector()
 {
@@ -152,6 +211,30 @@ void MainWindow::conector()
             }
         }
     }
+    else if(nivel == 3){
+        if(cont_disparos > 0 and seconds%30 == 0){
+            MovDisparo();
+        }
+        if(orbita < 7){
+            if(seconds%500 == 0){
+                mini.at(index) = new miniboss();
+                mini.at(index)->setPos(650,400);
+                Nivel3->addItem(mini.at(index));
+                index++;
+                orbita++;
+            }
+            if(orbita > 0 and seconds%10 == 0){
+                MovMiniBoss();
+            }
+        }
+        else{
+            if(orbita > 0 and seconds%70 == 0){
+                //MovMiniBoss();
+                MovBoss();
+            }
+        }
+
+    }
 }
 
 MainWindow::~MainWindow()
@@ -164,36 +247,59 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
         switch (e->key()) {
         case Qt::Key_A:
             astronauta->setPos(astronauta->pos_x-=10, astronauta->pos_y);
-            if(astronauta->pos_x == 50){
+            if(astronauta->pos_x <= 50){
                 astronauta->setPos(astronauta->pos_x+=10, astronauta->pos_y);
             }
             astronauta->direccion(1);
+            nave->setPos(nave->pos_x-=10, nave->pos_y);
+            if(nave->pos_x <= 50){
+                nave->setPos(nave->pos_x+=10, nave->pos_y);
+            }
             break;
         case Qt::Key_S:
             astronauta->setPos(astronauta->pos_x, astronauta->pos_y+=10);
-            if(astronauta->pos_y == 750){
+            if(astronauta->pos_y >= 750){
                 astronauta->setPos(astronauta->pos_x, astronauta->pos_y-=10);
             }
             nave->setPos(nave->pos_x, nave->pos_y+=10);
-            if(nave->pos_y == 750){
+            if(nave->pos_y >= 750){
                 nave->setPos(nave->pos_x, nave->pos_y-=10);
             }
             break;
         case Qt::Key_D:
             astronauta->setPos(astronauta->pos_x+=10, astronauta->pos_y);
-            if(astronauta->pos_x == 750){
+            if(astronauta->pos_x >= 750){
                 astronauta->setPos(astronauta->pos_x-=10, astronauta->pos_y);
+            }
+            nave->setPos(nave->pos_x+=10, nave->pos_y);
+            if(nave->pos_x >= 750){
+                nave->setPos(nave->pos_x-=10, nave->pos_y);
             }
             astronauta->direccion(0);
             break;
         case Qt::Key_W:
             astronauta->setPos(astronauta->pos_x, astronauta->pos_y-=10);
-            if(astronauta->pos_y == 50){
+            if(astronauta->pos_y <= 50){
                 astronauta->setPos(astronauta->pos_x, astronauta->pos_y+=10);
             }
             nave->setPos(nave->pos_x, nave->pos_y-=10);
-            if(nave->pos_y == 50){
+            if(nave->pos_y <= 50){
                 nave->setPos(nave->pos_x, nave->pos_y+=10);
+            }
+            break;
+        case Qt::Key_Space:
+            if(nivel == 3){
+                cont_disparos++;
+                if(cont_disparos == 1){
+                    shot = new disparo();
+                    if(shot->cont == 0){
+                        shot->posx = nave->pos_x+70;
+                        shot->posy = nave->pos_y;
+                        Nivel3->addItem(shot);
+                        shot->setPos(shot->posx,shot->posy);
+                        shot->cont++;
+                    }
+                }
             }
             break;
         default:

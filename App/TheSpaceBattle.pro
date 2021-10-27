@@ -9,14 +9,20 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    boss.cpp \
+    disparo.cpp \
     laser.cpp \
     main.cpp \
     mainwindow.cpp \
+    miniboss.cpp \
     personaje.cpp
 
 HEADERS += \
+    boss.h \
+    disparo.h \
     laser.h \
     mainwindow.h \
+    miniboss.h \
     personaje.h
 
 FORMS += \

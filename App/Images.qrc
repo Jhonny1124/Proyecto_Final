@@ -3,5 +3,8 @@
         <file>Sprites Personajes/Player1_Mov.png</file>
         <file>Sprites Personajes/Nave.png</file>
         <file>Sprites Personajes/Laser.png</file>
+        <file>Sprites Personajes/Boss.png</file>
+        <file>Sprites Personajes/Boss-1.png</file>
+        <file>Sprites Personajes/disparo.png</file>
     </qresource>
 </RCC>

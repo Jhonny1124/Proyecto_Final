@@ -19,6 +19,9 @@
 #include <QtMath>
 #include "personaje.h"
 #include "laser.h"
+#include "boss.h"
+#include "miniboss.h"
+#include "disparo.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -38,20 +41,28 @@ protected:
 private:
     Ui::MainWindow *ui;
 
-    QGraphicsScene *Nivel1, *Nivel2;
+    QGraphicsScene *Nivel1, *Nivel2, *Nivel3;
 
     personaje *astronauta, *nave;
     Laser *laser;
+    Boss *boss;
+    disparo *shot;
     QGraphicsRectItem *level1;
     std::array<QGraphicsEllipseItem *, 55> meteoritos;
     std::array<QGraphicsEllipseItem *, 10> cometas;
+    std::array<miniboss *, 7> mini;
 
     int seconds = 0, nivel = 1, indexm = -1, pruebam = 0, cont = 0;
 
     int indexc = -1, pruebac = 0;
     float t = 0;
 
+    int orbita = 0, index = 0, direccion = 0;
+
+    int cont_disparos = 0;
+
     float grados[55];
+    float grados_boss[7];
     float velocidad[10];
 
 public slots:
@@ -59,6 +70,9 @@ public slots:
     void Level2(int);
     void MovMeteoritos();
     void MovCometas();
+    void MovMiniBoss();
+    void MovBoss();
+    void MovDisparo();
     void conector();
 };
 #endif // MAINWINDOW_H
