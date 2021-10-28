@@ -8,24 +8,34 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    Nivel1 = new QGraphicsScene;
-    Nivel2 = new QGraphicsScene;
-    Nivel3 = new QGraphicsScene;
+    for(int i = 0; i < 3; i++){
+        Niveles.at(i) = new QGraphicsScene;
+    }
+    for(int i = 0; i < 2; i++){
+        naves.at(i) = new personaje(1);
+    }
+    inicio = new QGraphicsScene;
+    input = new intro();
     astronauta = new personaje();
-    nave = new personaje(1);
     level1 = new QGraphicsRectItem();
     laser = new Laser();
     shot = new disparo();
     boss = new Boss();
 
+    inicio->addItem(input);
+    input->setPos(400,400);
+    ui->graphicsView->setScene(inicio);
+    ui->graphicsView->setSceneRect(400,400,10,10);
+    ui->graphicsView->show();
+
+
     //Nivel 1 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-    /*level1 = Nivel1->addRect(0,0,80,80, QPen(QColor(1,1,1)), QImage("../TheSpaceBattle/App/Sprites Personajes/Circuito.jpg"));
-    Nivel1->addItem(astronauta);
+    level1 = Niveles.at(0)->addRect(0,0,80,80, QPen(QColor(1,1,1)), QImage("../TheSpaceBattle/App/Sprites Personajes/Circuito.jpg"));
+    Niveles.at(0)->addItem(astronauta);
     astronauta->setPos(400,400);
-    Nivel1->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/Galaxia.jpg"));
+    Niveles.at(0)->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/Galaxia.jpg"));
 
-    ui->graphicsView->setScene(Nivel1);*/
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,12 +44,11 @@ MainWindow::MainWindow(QWidget *parent)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /*nivel = 2;
-    Nivel2->addItem(nave);
-    Nivel2->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/Galaxia.jpg"));
-    nave->setPos(55,400);
-    nave->pos_x = 55;
-    nave->pos_y = 400;
+    Niveles.at(1)->addItem(naves.at(0));
+    Niveles.at(1)->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/Galaxia.jpg"));
+    naves.at(0)->setPos(55,400);
+    naves.at(0)->pos_x = 55;
+    naves.at(0)->pos_y = 400;
 
     for(int g = 0; g < 55; g++){
         grados[g] = 0;
@@ -48,30 +57,24 @@ MainWindow::MainWindow(QWidget *parent)
         velocidad[v] = 85*qSin(qDegreesToRadians(30.0));
     }
 
-    ui->graphicsView->setScene(Nivel2);*/
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    Nivel3->addItem(boss);
-    Nivel3->addItem(nave);
-    Nivel3->addItem(shot);
-    Nivel3->addItem(laser);
+    Niveles.at(2)->addItem(boss);
+    Niveles.at(2)->addItem(naves.at(1));
+    Niveles.at(2)->addItem(shot);
+    Niveles.at(2)->addItem(laser);
     laser->setPos(0,-150);
     shot->setPos(-30,-30);
-    Nivel3->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/Galaxia.jpg"));
-    nivel = 3;
-    nave->setPos(55,400);
-    nave->pos_x = 55;
-    nave->pos_y = 400;
+    Niveles.at(2)->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/Galaxia.jpg"));
+    naves.at(1)->setPos(55,400);
+    naves.at(1)->pos_x = 55;
+    naves.at(1)->pos_y = 400;
     boss->setPos(650,400);
 
     for(int g = 0; g < 7; g++){
         grados_boss[g] = 0;
     }
 
-    ui->graphicsView->setScene(Nivel3);
-
-    ui->graphicsView->setSceneRect(400,400,10,10);
-    ui->graphicsView->show();
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(conector()));
     timer->start(1);
@@ -91,14 +94,14 @@ void MainWindow::Level2(int a = 0)
     if(a == 0){
         indexm++;
 
-        meteoritos.at(indexm) = Nivel2->addEllipse(720,QRandomGenerator::global()->bounded(710),90,90, QPen(QColor(1,1,1)), QImage("../TheSpaceBattle/App/Sprites Personajes/Meteorito.jpg"));
+        meteoritos.at(indexm) = Niveles.at(1)->addEllipse(720,QRandomGenerator::global()->bounded(710),90,90, QPen(QColor(1,1,1)), QImage("../TheSpaceBattle/App/Sprites Personajes/Meteorito.jpg"));
 
         pruebam++;
     }
     else{
         indexc++;
 
-        cometas.at(indexc) = Nivel2->addEllipse(720,nave->pos_y,45,45, QPen(QColor(1,1,1)), QImage("../TheSpaceBattle/App/Sprites Personajes/Cometas.jpg"));
+        cometas.at(indexc) = Niveles.at(1)->addEllipse(720,naves.at(0)->pos_y,45,45, QPen(QColor(1,1,1)), QImage("../TheSpaceBattle/App/Sprites Personajes/Cometas.jpg"));
 
         pruebac++;
     }
@@ -113,13 +116,13 @@ void MainWindow::MovMeteoritos()
             meteoritos.at(i)->setPos(meteoritos.at(i)->pos().x()-0.3,70*qSin(qDegreesToRadians(grados[i]))-(meteoritos.at(i)->pos().y()));
             grados[i]++;
             if(meteoritos.at(i)->pos().x() < -810){
-                Nivel2->removeItem(meteoritos.at(i));
+                Niveles.at(1)->removeItem(meteoritos.at(i));
                 meteoritos.at(i) = NULL;
             }
-            if(nave->collidesWithItem(meteoritos.at(i))){
-                Nivel2->removeItem(meteoritos.at(i));
+            if(naves.at(0)->collidesWithItem(meteoritos.at(i))){
+                Niveles.at(1)->removeItem(meteoritos.at(i));
                 meteoritos.at(i) = NULL;
-                nave->vidas--;
+                naves.at(0)->vidas--;
             }
         }
     }
@@ -133,13 +136,13 @@ void MainWindow::MovCometas()
             cometas.at(i)->setPos(cometas.at(i)->pos().x()-(Vx*t), cometas.at(i)->pos().y()-(velocidad[i])*t+((g/2)*(t*t)));
             velocidad[i] = velocidad[i] - g*t;
             if(cometas.at(i)->pos().x() < -765){
-                Nivel2->removeItem(cometas.at(i));
+                Niveles.at(1)->removeItem(cometas.at(i));
                 cometas.at(i) = NULL;
             }
-            if(nave->collidesWithItem(cometas.at(i))){
-                Nivel2->removeItem(cometas.at(i));
+            if(naves.at(0)->collidesWithItem(cometas.at(i))){
+                Niveles.at(1)->removeItem(cometas.at(i));
                 cometas.at(i) = NULL;
-                nave->vidas--;
+                naves.at(0)->vidas--;
             }
         }
     }
@@ -199,7 +202,7 @@ void MainWindow::DanoBoss()
                 if(shot->collidesWithItem(mini.at(i))){
                     shot->setPos(-30,-30);
                     shot->posx = -30;
-                    Nivel3->removeItem(mini.at(i));
+                    Niveles.at(2)->removeItem(mini.at(i));
                     mini.at(i) = NULL;
                     cont_disparos = 0;
                 }
@@ -219,6 +222,9 @@ void MainWindow::DanoBoss()
             boss->vidas--;
         }
     }
+    if(boss->vidas == 0){
+        //exit(1);
+    }
 }
 
 void MainWindow::MovLaser()
@@ -236,10 +242,32 @@ void MainWindow::MovLaser()
 
 }
 
+void MainWindow::CambioEscena()
+{
+    if(nivel == 1){
+        ui->graphicsView->setScene(Niveles.at(0));
+        ui->graphicsView->show();
+    }
+    if(nivel == 2){
+        ui->graphicsView->setScene(Niveles.at(1));
+        ui->graphicsView->show();
+    }
+    if(nivel == 3){
+        ui->graphicsView->setScene(Niveles.at(2));
+        ui->graphicsView->show();
+    }
+
+    ui->graphicsView->setSceneRect(400,400,10,10);
+}
+
 
 void MainWindow::conector()
 {
     seconds++;
+    if(seconds == 11300 and nivel == 0){
+        nivel = 1;
+    }
+    CambioEscena();
     if(nivel == 1){
         ui->lcdNumber->display(astronauta->vidas);
         ui->lcdNumber_2->display(astronauta->puntos);
@@ -251,11 +279,15 @@ void MainWindow::conector()
             else{
                 astronauta->puntos+=100;
             }
+            seconds = 0;
+        }
+        if(astronauta->puntos == 2000){
+            nivel = 2;
         }
     }
     else if(nivel == 2){
-        ui->lcdNumber->display(nave->vidas);
-        ui->lcdNumber_2->display(nave->puntos);
+        ui->lcdNumber->display(naves.at(0)->vidas);
+        ui->lcdNumber_2->display(naves.at(0)->puntos);
         if(pruebam > 0 and seconds%2 == 0)
             MovMeteoritos();
         if(pruebac > 0 and seconds%3 == 0)
@@ -268,8 +300,8 @@ void MainWindow::conector()
         }
     }
     else if(nivel == 3){
-        ui->lcdNumber->display(nave->vidas);
-        ui->lcdNumber_2->display(nave->puntos);
+        ui->lcdNumber->display(naves.at(1)->vidas);
+        ui->lcdNumber_2->display(naves.at(1)->puntos);
         if(cont_disparos > 0 and shot->posx != -30){
             DanoBoss();
             if(seconds%30 == 0)
@@ -279,7 +311,7 @@ void MainWindow::conector()
             if(seconds%500 == 0){
                 mini.at(index) = new miniboss();
                 mini.at(index)->setPos(650,400);
-                Nivel3->addItem(mini.at(index));
+                Niveles.at(2)->addItem(mini.at(index));
                 index++;
                 orbita++;
             }
@@ -291,27 +323,27 @@ void MainWindow::conector()
             DuracionLaser++;
             if(DuracionLaser >= 4000){
                 MovLaser();
-                if(nave->collidesWithItem(laser) and DanoLaser == 0){
-                    nave->vidas--;
+                if(naves.at(1)->collidesWithItem(laser) and DanoLaser == 0){
+                    naves.at(1)->vidas--;
                     DanoLaser = 1;
                 }
             }
-            if(orbita > 0 and seconds%70 == 0){
+            if(orbita > 0 and seconds%70 == 0 and boss != NULL){
                 MovBoss();
             }
-            if(nave->collidesWithItem(boss)){
-                nave->vidas--;
-                nave->setPos(55,400);
-                nave->pos_x = 55;
-                nave->pos_y = 400;
+            if(naves.at(1)->collidesWithItem(boss)){
+                naves.at(1)->vidas--;
+                naves.at(1)->setPos(55,400);
+                naves.at(1)->pos_x = 55;
+                naves.at(1)->pos_y = 400;
             }
             for(int i = 0; i < orbita; i++){
                 if(mini.at(i) != NULL){
-                    if(nave->collidesWithItem(mini.at(i))){
-                        nave->vidas--;
-                        nave->setPos(55,400);
-                        nave->pos_x = 55;
-                        nave->pos_y = 400;
+                    if(naves.at(1)->collidesWithItem(mini.at(i))){
+                        naves.at(1)->vidas--;
+                        naves.at(1)->setPos(55,400);
+                        naves.at(1)->pos_x = 55;
+                        naves.at(1)->pos_y = 400;
                     }
                 }
             }
@@ -334,9 +366,11 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
                 astronauta->setPos(astronauta->pos_x+=10, astronauta->pos_y);
             }
             astronauta->direccion(1);
-            nave->setPos(nave->pos_x-=10, nave->pos_y);
-            if(nave->pos_x <= 50){
-                nave->setPos(nave->pos_x+=10, nave->pos_y);
+            if(nivel == 2 or nivel == 3){
+                naves.at(nave_index)->setPos(naves.at(nave_index)->pos_x-=10, naves.at(nave_index)->pos_y);
+                if(naves.at(nave_index)->pos_x <= 50){
+                    naves.at(nave_index)->setPos(naves.at(nave_index)->pos_x+=10, naves.at(nave_index)->pos_y);
+                }
             }
             break;
         case Qt::Key_S:
@@ -344,9 +378,11 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
             if(astronauta->pos_y >= 750){
                 astronauta->setPos(astronauta->pos_x, astronauta->pos_y-=10);
             }
-            nave->setPos(nave->pos_x, nave->pos_y+=10);
-            if(nave->pos_y >= 750){
-                nave->setPos(nave->pos_x, nave->pos_y-=10);
+            if(nivel == 2 or nivel == 3){
+                naves.at(nave_index)->setPos(naves.at(nave_index)->pos_x, naves.at(nave_index)->pos_y+=10);
+                if(naves.at(nave_index)->pos_y >= 750){
+                    naves.at(nave_index)->setPos(naves.at(nave_index)->pos_x, naves.at(nave_index)->pos_y-=10);
+                }
             }
             break;
         case Qt::Key_D:
@@ -354,9 +390,11 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
             if(astronauta->pos_x >= 750){
                 astronauta->setPos(astronauta->pos_x-=10, astronauta->pos_y);
             }
-            nave->setPos(nave->pos_x+=10, nave->pos_y);
-            if(nave->pos_x >= 750){
-                nave->setPos(nave->pos_x-=10, nave->pos_y);
+            if(nivel == 2 or nivel == 3){
+                naves.at(nave_index)->setPos(naves.at(nave_index)->pos_x+=10, naves.at(nave_index)->pos_y);
+                if(naves.at(nave_index)->pos_x >= 750){
+                    naves.at(nave_index)->setPos(naves.at(nave_index)->pos_x-=10, naves.at(nave_index)->pos_y);
+                }
             }
             astronauta->direccion(0);
             break;
@@ -365,17 +403,19 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
             if(astronauta->pos_y <= 50){
                 astronauta->setPos(astronauta->pos_x, astronauta->pos_y+=10);
             }
-            nave->setPos(nave->pos_x, nave->pos_y-=10);
-            if(nave->pos_y <= 50){
-                nave->setPos(nave->pos_x, nave->pos_y+=10);
+            if(nivel == 2 or nivel == 3){
+                naves.at(nave_index)->setPos(naves.at(nave_index)->pos_x, naves.at(nave_index)->pos_y-=10);
+                if(naves.at(nave_index)->pos_y <= 50){
+                    naves.at(nave_index)->setPos(naves.at(nave_index)->pos_x, naves.at(nave_index)->pos_y+=10);
+                }
             }
             break;
         case Qt::Key_Space:
             if(nivel == 3){
                 cont_disparos++;
                 if(cont_disparos == 1){
-                    shot->posx = nave->pos_x+70;
-                    shot->posy = nave->pos_y;
+                    shot->posx = naves.at(1)->pos_x+70;
+                    shot->posy = naves.at(1)->pos_y;
                     shot->setPos(shot->posx,shot->posy);
                 }
             }

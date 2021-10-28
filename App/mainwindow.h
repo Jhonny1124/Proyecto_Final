@@ -22,6 +22,7 @@
 #include "boss.h"
 #include "miniboss.h"
 #include "disparo.h"
+#include "intro.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -41,9 +42,12 @@ protected:
 private:
     Ui::MainWindow *ui;
 
-    QGraphicsScene *Nivel1, *Nivel2, *Nivel3;
+    std::array< QGraphicsScene *, 3> Niveles;
+    QGraphicsScene * inicio;
 
-    personaje *astronauta, *nave;
+    intro *input;
+    personaje *astronauta;
+    std::array<personaje *, 2> naves;
     Laser *laser;
     Boss *boss;
     disparo *shot;
@@ -52,7 +56,7 @@ private:
     std::array<QGraphicsEllipseItem *, 10> cometas;
     std::array<miniboss *, 7> mini;
 
-    int seconds = 0, nivel = 1, indexm = -1, pruebam = 0, cont = 0;
+    int seconds = 0, nivel = 0, indexm = -1, pruebam = 0, cont = 0, nave_index = 0;
 
     int indexc = -1, pruebac = 0;
     float t = 0;
@@ -75,6 +79,7 @@ public slots:
     void MovDisparo();
     void DanoBoss();
     void MovLaser();
+    void CambioEscena();
     void conector();
 };
 #endif // MAINWINDOW_H

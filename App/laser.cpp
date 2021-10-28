@@ -9,7 +9,7 @@ Laser::Laser(QObject *parent) : QObject(parent)
     pixmap = new QPixmap(":/Sprites Personajes/Laser.png");
 
     ancho = 470;
-    alto = 100;
+    alto = 125;
 
     timer->start(150);
     connect(timer, &QTimer::timeout, this, &Laser::Movimiento);

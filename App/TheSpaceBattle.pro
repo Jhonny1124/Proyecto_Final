@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     boss.cpp \
     disparo.cpp \
+    intro.cpp \
     laser.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
 HEADERS += \
     boss.h \
     disparo.h \
+    intro.h \
     laser.h \
     mainwindow.h \
     miniboss.h \
@@ -37,4 +39,5 @@ RESOURCES += \
     Images.qrc
 
 DISTFILES += \
+    Sprites Personajes/Intro.jpg \
     Sprites Personajes/Player1_Mov.png
