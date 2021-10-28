@@ -43,7 +43,7 @@ private:
     Ui::MainWindow *ui;
 
     std::array< QGraphicsScene *, 3> Niveles;
-    QGraphicsScene * inicio;
+    std::array< QGraphicsScene *, 4> Escenas;
 
     intro *input;
     personaje *astronauta;
@@ -56,7 +56,7 @@ private:
     std::array<QGraphicsEllipseItem *, 10> cometas;
     std::array<miniboss *, 7> mini;
 
-    int seconds = 0, nivel = 0, indexm = -1, pruebam = 0, cont = 0, nave_index = 0;
+    int seconds = 0, nivel = 0, indexm = -1, pruebam = 0, cont = 0, nave_index = 0, cambio = 0;
 
     int indexc = -1, pruebac = 0;
     float t = 0;
@@ -80,6 +80,9 @@ public slots:
     void DanoBoss();
     void MovLaser();
     void CambioEscena();
+    void limpiarEscena2();
+    void limpiarEscena3();
+    void GameOver();
     void conector();
 };
 #endif // MAINWINDOW_H
