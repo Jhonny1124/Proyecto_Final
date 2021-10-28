@@ -59,7 +59,7 @@ private:
 
     int orbita = 0, index = 0, direccion = 0;
 
-    int cont_disparos = 0;
+    int cont_disparos = 0, defensa = 0, DuracionLaser = 0, DanoLaser = 0;
 
     float grados[55];
     float grados_boss[7];
@@ -73,6 +73,8 @@ public slots:
     void MovMiniBoss();
     void MovBoss();
     void MovDisparo();
+    void DanoBoss();
+    void MovLaser();
     void conector();
 };
 #endif // MAINWINDOW_H

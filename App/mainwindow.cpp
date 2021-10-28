@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     nave = new personaje(1);
     level1 = new QGraphicsRectItem();
     laser = new Laser();
+    shot = new disparo();
     boss = new Boss();
 
     //Nivel 1 //
@@ -52,6 +53,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     Nivel3->addItem(boss);
     Nivel3->addItem(nave);
+    Nivel3->addItem(shot);
+    Nivel3->addItem(laser);
+    laser->setPos(0,-150);
+    shot->setPos(-30,-30);
     Nivel3->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/Galaxia.jpg"));
     nivel = 3;
     nave->setPos(55,400);
@@ -166,16 +171,69 @@ void MainWindow::MovBoss()
         y-=10;
     }
     for(int i = 0; i < orbita; i++){
-        mini.at(i)->setPos( -200*qCos(qDegreesToRadians(grados_boss[i]))+623, 200*qSin(qDegreesToRadians(grados_boss[i]))+y);
-        grados_boss[i]++;
+        if(mini.at(i) != NULL){
+            mini.at(i)->setPos( -200*qCos(qDegreesToRadians(grados_boss[i]))+623, 200*qSin(qDegreesToRadians(grados_boss[i]))+y);
+            grados_boss[i]++;
+        }
     }
     boss->setPos(boss->pos().x(),y);
 }
 
 void MainWindow::MovDisparo()
 {
-    shot->posx+=10;
-    shot->setPos(shot->posx, shot->posy);
+        shot->posx+=10;
+        shot->setPos(shot->posx, shot->posy);
+
+}
+
+void MainWindow::DanoBoss()
+{
+    if(shot->posx == 755){
+        shot->setPos(-30,-30);
+        shot->posx = -30;
+        cont_disparos = 0;
+    }
+    if(orbita == 7){
+        for(int i = 0; i < orbita; i++){
+            if(mini.at(i) != NULL){
+                if(shot->collidesWithItem(mini.at(i))){
+                    shot->setPos(-30,-30);
+                    shot->posx = -30;
+                    Nivel3->removeItem(mini.at(i));
+                    mini.at(i) = NULL;
+                    cont_disparos = 0;
+                }
+            }
+        }
+    }
+    if(defensa < 7){
+        if(mini.at(defensa) == NULL){
+            defensa++;
+        }
+    }
+    if(shot->collidesWithItem(boss)){
+        shot->setPos(-30,-30);
+        shot->posx = -30;
+        cont_disparos = 0;
+        if(defensa == 7){
+            boss->vidas--;
+        }
+    }
+}
+
+void MainWindow::MovLaser()
+{
+    laser->setPos(boss->pos().x()-410, boss->pos().y());
+    if(DuracionLaser == 4000){
+        laser->columnas = 0;
+    }
+    if(DuracionLaser == 6000){
+        DuracionLaser = 0;
+        DanoLaser = 0;
+        laser->setPos(0, -150);
+    }
+
+
 }
 
 
@@ -185,15 +243,14 @@ void MainWindow::conector()
     if(nivel == 1){
         ui->lcdNumber->display(astronauta->vidas);
         ui->lcdNumber_2->display(astronauta->puntos);
-        if(seconds == 3500 or astronauta->collidesWithItem(level1)){
+        if(seconds%3500 == 0 or astronauta->collidesWithItem(level1)){
             Level1();
-            if(seconds == 3500){
+            if(seconds%3500 == 0){
                 astronauta->vidas--;
             }
             else{
                 astronauta->puntos+=100;
             }
-            seconds = 0;
         }
     }
     else if(nivel == 2){
@@ -205,15 +262,18 @@ void MainWindow::conector()
             MovCometas();
         if(seconds%1000 == 0 and indexm < 54){
             Level2();
-            if(seconds == 6000 and indexc < 9){
+            if(seconds%6000 == 0 and indexc < 9){
                 Level2(1);
-                seconds = 0;
             }
         }
     }
     else if(nivel == 3){
-        if(cont_disparos > 0 and seconds%30 == 0){
-            MovDisparo();
+        ui->lcdNumber->display(nave->vidas);
+        ui->lcdNumber_2->display(nave->puntos);
+        if(cont_disparos > 0 and shot->posx != -30){
+            DanoBoss();
+            if(seconds%30 == 0)
+                MovDisparo();
         }
         if(orbita < 7){
             if(seconds%500 == 0){
@@ -228,9 +288,32 @@ void MainWindow::conector()
             }
         }
         else{
+            DuracionLaser++;
+            if(DuracionLaser >= 4000){
+                MovLaser();
+                if(nave->collidesWithItem(laser) and DanoLaser == 0){
+                    nave->vidas--;
+                    DanoLaser = 1;
+                }
+            }
             if(orbita > 0 and seconds%70 == 0){
-                //MovMiniBoss();
                 MovBoss();
+            }
+            if(nave->collidesWithItem(boss)){
+                nave->vidas--;
+                nave->setPos(55,400);
+                nave->pos_x = 55;
+                nave->pos_y = 400;
+            }
+            for(int i = 0; i < orbita; i++){
+                if(mini.at(i) != NULL){
+                    if(nave->collidesWithItem(mini.at(i))){
+                        nave->vidas--;
+                        nave->setPos(55,400);
+                        nave->pos_x = 55;
+                        nave->pos_y = 400;
+                    }
+                }
             }
         }
 
@@ -291,14 +374,9 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
             if(nivel == 3){
                 cont_disparos++;
                 if(cont_disparos == 1){
-                    shot = new disparo();
-                    if(shot->cont == 0){
-                        shot->posx = nave->pos_x+70;
-                        shot->posy = nave->pos_y;
-                        Nivel3->addItem(shot);
-                        shot->setPos(shot->posx,shot->posy);
-                        shot->cont++;
-                    }
+                    shot->posx = nave->pos_x+70;
+                    shot->posy = nave->pos_y;
+                    shot->setPos(shot->posx,shot->posy);
                 }
             }
             break;

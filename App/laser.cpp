@@ -8,7 +8,7 @@ Laser::Laser(QObject *parent) : QObject(parent)
 
     pixmap = new QPixmap(":/Sprites Personajes/Laser.png");
 
-    ancho = 800;
+    ancho = 470;
     alto = 100;
 
     timer->start(150);
@@ -27,8 +27,8 @@ void Laser::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 
 void Laser::Movimiento()
 {
-    if(columnas < 8000){
-       columnas +=800;
+    if(columnas < 4700){
+       columnas +=470;
     }
     this->update(-ancho/2, -alto/2, ancho, alto);
 }
