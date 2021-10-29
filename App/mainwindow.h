@@ -23,6 +23,7 @@
 #include "miniboss.h"
 #include "disparo.h"
 #include "intro.h"
+#include "basura.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -44,26 +45,30 @@ private:
 
     std::array< QGraphicsScene *, 3> Niveles;
     std::array< QGraphicsScene *, 4> Escenas;
+    QGraphicsScene * jugador[2];
 
     intro *input;
     personaje *astronauta;
     std::array<personaje *, 2> naves;
+    basura *BasuraEspacial;
     Laser *laser;
     Boss *boss;
-    disparo *shot;
+    disparo *shots[2];
     QGraphicsRectItem *level1;
     std::array<QGraphicsEllipseItem *, 55> meteoritos;
     std::array<QGraphicsEllipseItem *, 10> cometas;
     std::array<miniboss *, 7> mini;
 
-    int seconds = 0, nivel = 0, indexm = -1, pruebam = 0, cont = 0, nave_index = 0, cambio = 0;
+    int turno = 1, progreso = 0, continuar = 0, fin = 0;
+
+    int seconds = 0, nivel = 0, indexm = -1, pruebam = 0, cont = 0, nave_index = 0, cambio = 0, reiniciar = 1;
 
     int indexc = -1, pruebac = 0;
     float t = 0;
 
-    int orbita = 0, index = 0, direccion = 0;
+    int orbita = 0, index = 0, direccion = 0,  y = 373;
 
-    int cont_disparos = 0, defensa = 0, DuracionLaser = 0, DanoLaser = 0;
+    int cont_disparos = 0, defensa = 0, DuracionLaser = 0, DanoLaser = 0, add = 0;
 
     float grados[55];
     float grados_boss[7];
@@ -71,6 +76,7 @@ private:
 
 public slots:
     void Level1();
+    void MovBasura();
     void Level2(int);
     void MovMeteoritos();
     void MovCometas();
@@ -83,6 +89,8 @@ public slots:
     void limpiarEscena2();
     void limpiarEscena3();
     void GameOver();
+    void PasarTurno();
+    void GameOverMulti();
     void conector();
 };
 #endif // MAINWINDOW_H

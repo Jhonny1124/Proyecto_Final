@@ -1,5 +1,5 @@
-#ifndef BOSS_H
-#define BOSS_H
+#ifndef BASURA_H
+#define BASURA_H
 
 #include <QObject>
 #include <QGraphicsItem>
@@ -7,11 +7,11 @@
 #include <QPixmap>
 #include <QPainter>
 
-class Boss : public QObject, public QGraphicsItem
+class basura : public QObject, public QGraphicsItem
 {
     Q_OBJECT
 public:
-    explicit Boss(QObject *parent = nullptr);
+    explicit basura(QObject *parent = nullptr);
 
     QTimer *timer;
     QPixmap *pixmap;
@@ -20,7 +20,7 @@ public:
 
     float ancho, alto;
 
-    int vidas = 3, posx, posy;
+    int posx, posy;
 
 
     QRectF boundingRect() const;
@@ -33,4 +33,4 @@ public slots:
 
 };
 
-#endif // BOSS_H
+#endif // BASURA_H
