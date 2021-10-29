@@ -259,8 +259,23 @@ void MainWindow::DanoBoss()
 
         }
     }
-    if(boss->vidas == 0){
-        //exit(1);
+    if(turno == 1 and boss->vidas == 0){
+        progreso = 1;
+        turno = 2;
+        seconds = 0;
+    }
+    if(turno == 3 and boss->vidas == 0){
+        if(progreso == 1){
+            nivel = 4;
+        }
+        else{
+            reiniciar = 0;
+            fin = 1;
+            GameOverMulti();
+        }
+    }
+    if(turno ==  0 and boss->vidas == 0){
+        nivel = 4;
     }
     for(int i = 0; i < pruebam; i++){
         if(meteoritos.at(i) != NULL){
@@ -281,7 +296,7 @@ void MainWindow::MovLaser()
     if(DuracionLaser == 4000){
         laser->columnas = 0;
     }
-    if(DuracionLaser == 6000){
+    if(DuracionLaser == 7500){
         DuracionLaser = 0;
         DanoLaser = 0;
         laser->setPos(0, -150);
@@ -452,38 +467,32 @@ void MainWindow::PasarTurno()
         naves.at(0)->vidas = 3;
         naves.at(0)->puntos = 0;
     }
-    if(naves.at(1)->vidas == 0){
-        if(reiniciar == 0){
-            Escenas.at(3)->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/GAME OVER.png"));
-            ui->graphicsView->setScene(Escenas.at(3));
-            ui->graphicsView->show();
-        }
-        else{
-            limpiarEscena3();
-            laser->setPos(0,-150);
-            shots[nivel-2]->setPos(-30,-30);
-            naves.at(1)->setPos(55,400);
-            naves.at(1)->pos_x = 55;
-            naves.at(1)->pos_y = 400;
-            boss->setPos(650,400);
-            boss->posx = 650;
-            boss->posy = 400;
-            y = 373;
-            boss->vidas = 3;
+    if(nivel == 3 and turno == 2){
+        ui->graphicsView->setScene(jugador[turno-1]);
+        ui->graphicsView->show();
+        limpiarEscena3();
+        laser->setPos(0,-150);
+        shots[nivel-2]->setPos(-30,-30);
+        naves.at(1)->setPos(55,400);
+        naves.at(1)->pos_x = 55;
+        naves.at(1)->pos_y = 400;
+        boss->setPos(650,400);
+        boss->posx = 650;
+        boss->posy = 400;
+        y = 373;
+        boss->vidas = 3;
 
-            for(int g = 0; g < 7; g++){
-                grados_boss[g] = 0;
-            }
-
-            naves.at(1)->vidas = 3;
-            naves.at(1)->puntos = 0;
-            cont_disparos = 0;
-            orbita = 0;
-            index = 0;
-            seconds = 60500;
-            DuracionLaser = 0;
-            nivel = 2;
+        for(int g = 0; g < 7; g++){
+            grados_boss[g] = 0;
         }
+
+        naves.at(1)->vidas = 3;
+        naves.at(1)->puntos = 0;
+        cont_disparos = 0;
+        orbita = 0;
+        index = 0;
+        DuracionLaser = 0;
+        nivel = 3;
     }
 }
 
@@ -535,10 +544,49 @@ void MainWindow::GameOverMulti()
             pruebam = 0, pruebac = 0;
             nivel = 1;
             cambio = 0;
-            turno = 1;
+            turno = 3;
+            progreso = 1;
+            astronauta->puntos = 2000;
             continuar = 0;
             naves.at(0)->vidas = 3;
             naves.at(0)->puntos = 0;
+        }
+    }
+    if(fin == 1 and progreso == 0 and nivel == 3){
+        if(reiniciar == 0){
+            Escenas.at(3)->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/GAME OVER.png"));
+            ui->graphicsView->setScene(Escenas.at(3));
+            ui->graphicsView->show();
+        }
+        else{
+            limpiarEscena3();
+            laser->setPos(0,-150);
+            shots[nivel-2]->setPos(-30,-30);
+            naves.at(1)->setPos(55,400);
+            naves.at(1)->pos_x = 55;
+            naves.at(1)->pos_y = 400;
+            boss->setPos(650,400);
+            boss->posx = 650;
+            boss->posy = 400;
+            y = 373;
+            boss->vidas = 3;
+
+            for(int g = 0; g < 7; g++){
+                grados_boss[g] = 0;
+            }
+
+            naves.at(1)->vidas = 3;
+            naves.at(1)->puntos = 0;
+            cont_disparos = 0;
+            orbita = 0;
+            index = 0;
+            seconds = 60500;
+            cambio = 0;
+            continuar = 0;
+            turno = 3;
+            progreso = 1;
+            DuracionLaser = 0;
+            nivel = 2;
         }
     }
 
@@ -652,6 +700,7 @@ void MainWindow::conector()
                 if(turno == 1){
                     turno = 2;
                     progreso++;
+                    seconds = 0;
                 }
                 if(turno == 3){
                     progreso++;
@@ -666,10 +715,24 @@ void MainWindow::conector()
         }
     }
     else if(nivel == 2){
-        qDebug() << turno << Qt::endl;
-        if(turno == 3){
-            ui->graphicsView->setScene(Niveles.at(1));
-            ui->graphicsView->show();
+        if(naves.at(0)->vidas == 0 and turno == 3){
+            if(progreso == 0){
+                reiniciar = 0;
+                fin = 1;
+                GameOverMulti();
+            }
+        }
+        if(seconds >= 60500 or naves.at(0)->vidas == 0){
+            if(turno == 3){
+                progreso++;
+                if(progreso >= 1){
+                    nave_index = 1;
+                    cambio = 0;
+                    Escenas.at(3)->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/Nivel 3.png"));
+                    ui->graphicsView->setScene(Escenas.at(3));
+                    ui->graphicsView->show();
+                }
+            }
         }
         if(turno == 1 and continuar == 0){
             if(seconds%1000 == 0){
@@ -690,10 +753,11 @@ void MainWindow::conector()
                 turno = 2;
                 seconds = 0;
             }
-            if(turno == 3 and naves.at(0)->vidas == 0){
-                if(progreso == 0){
-                    reiniciar = 0;
-                    fin = 1;
+            if(seconds >= 60500){
+                if(turno == 1){
+                    turno = 2;
+                    progreso++;
+                    seconds = 0;
                 }
             }
             if(cont_disparos > 0 and shots[nivel-2]->posx != -30){
@@ -710,9 +774,9 @@ void MainWindow::conector()
             }
             ui->lcdNumber->display(naves.at(0)->vidas);
             ui->lcdNumber_2->display(naves.at(0)->puntos);
-            if(pruebam > 0 and seconds%2 == 0)
+            if(pruebam > 0 and seconds%2 == 0 and fin != 1)
                 MovMeteoritos();
-            if(pruebac > 0 and seconds%3 == 0)
+            if(pruebac > 0 and seconds%3 == 0 and fin != 1)
                 MovCometas();
             if(seconds%1000 == 0 and indexm < 54){
                 Level2();
@@ -723,64 +787,129 @@ void MainWindow::conector()
         }
     }
     else if(nivel == 3){
-        ui->lcdNumber->display(naves.at(1)->vidas);
-        ui->lcdNumber_2->display(naves.at(1)->puntos);
-        if(cont_disparos > 0 and shots[nivel-2]->posx != -30){
-            DanoBoss();
-            if(seconds%30 == 0)
-                MovDisparo();
-        }
-        if(orbita < 7){
-            if(seconds%500 == 0){
-                mini.at(index) = new miniboss();
-                mini.at(index)->setPos(650,400);
-                Niveles.at(2)->addItem(mini.at(index));
-                index++;
-                orbita++;
+        nave_index = 1;
+        if(turno == 1 and continuar == 0){
+            if(seconds%1000 == 0){
+                continuar = 1;
+                seconds = 0;
             }
-            if(orbita > 0 and seconds%10 == 0){
-                MovMiniBoss();
+            ui->graphicsView->setScene(jugador[turno-1]);
+            ui->graphicsView->show();
+        }
+        else if(turno == 2 and seconds != 0){
+            PasarTurno();
+            if(seconds%1000 == 0){
+                turno = 3;
             }
         }
         else{
-            DuracionLaser++;
-            if(DuracionLaser >= 4000){
-                MovLaser();
-                if(naves.at(1)->collidesWithItem(laser) and DanoLaser == 0){
-                    naves.at(1)->vidas--;
-                    if(naves.at(1)->vidas == 0){
-                        reiniciar = 0;
-                    }
-                    DanoLaser = 1;
+            ui->lcdNumber->display(naves.at(1)->vidas);
+            ui->lcdNumber_2->display(naves.at(1)->puntos);
+            if(cont_disparos > 0 and shots[nivel-2]->posx != -30){
+                DanoBoss();
+                if(seconds%30 == 0)
+                    MovDisparo();
+            }
+            if(orbita < 7){
+                if(seconds%500 == 0){
+                    mini.at(index) = new miniboss();
+                    mini.at(index)->setPos(650,400);
+                    Niveles.at(2)->addItem(mini.at(index));
+                    index++;
+                    orbita++;
+                }
+                if(orbita > 0 and seconds%10 == 0){
+                    MovMiniBoss();
                 }
             }
-            if(orbita > 0 and seconds%70 == 0 and boss != NULL){
-                MovBoss();
-            }
-            if(naves.at(1)->collidesWithItem(boss)){
-                naves.at(1)->vidas--;
-                if(naves.at(1)->vidas == 0){
-                    reiniciar = 0;
-                }
-                naves.at(1)->setPos(55,400);
-                naves.at(1)->pos_x = 55;
-                naves.at(1)->pos_y = 400;
-            }
-            for(int i = 0; i < orbita; i++){
-                if(mini.at(i) != NULL){
-                    if(naves.at(1)->collidesWithItem(mini.at(i))){
+            else{
+                DuracionLaser++;
+                if(DuracionLaser >= 4000){
+                    MovLaser();
+                    if(naves.at(1)->collidesWithItem(laser) and DanoLaser == 0){
                         naves.at(1)->vidas--;
-                        if(naves.at(1)->vidas == 0){
+                        ui->lcdNumber->display(naves.at(1)->vidas);
+                        if(naves.at(1)->vidas == 0 and turno == 0){
                             reiniciar = 0;
                         }
-                        naves.at(1)->setPos(55,400);
-                        naves.at(1)->pos_x = 55;
-                        naves.at(1)->pos_y = 400;
+                        if(turno == 1 and naves.at(1)->vidas == 0){
+                            turno = 2;
+                            seconds = 0;
+                        }
+                        if(turno == 3 and naves.at(1)->vidas == 0){
+                            if(progreso == 0){
+                                reiniciar = 0;
+                                fin = 1;
+                                GameOverMulti();
+                            }
+                            else{
+                                nivel = 4;
+                            }
+                        }
+                        DanoLaser = 1;
+                    }
+                }
+                if(orbita > 0 and seconds%70 == 0 and boss != NULL){
+                    MovBoss();
+                }
+                if(naves.at(1)->collidesWithItem(boss)){
+                    naves.at(1)->vidas--;
+                    ui->lcdNumber->display(naves.at(1)->vidas);
+                    if(naves.at(1)->vidas == 0 and turno == 0){
+                        reiniciar = 0;
+                    }
+                    if(turno == 1 and naves.at(1)->vidas == 0){
+                        turno = 2;
+                        seconds = 0;
+                    }
+                    if(turno == 3 and naves.at(1)->vidas == 0){
+                        if(progreso == 0){
+                            reiniciar = 0;
+                            fin = 1;
+                            GameOverMulti();
+                        }
+                        else{
+                            nivel = 4;
+                        }
+                    }
+                    naves.at(1)->setPos(55,400);
+                    naves.at(1)->pos_x = 55;
+                    naves.at(1)->pos_y = 400;
+                }
+                for(int i = 0; i < orbita; i++){
+                    if(mini.at(i) != NULL){
+                        if(naves.at(1)->collidesWithItem(mini.at(i))){
+                            naves.at(1)->vidas--;
+                            ui->lcdNumber->display(naves.at(1)->vidas);
+                            if(naves.at(1)->vidas == 0 and turno == 0){
+                                reiniciar = 0;
+                            }
+                            if(turno == 1 and naves.at(1)->vidas == 0){
+                                turno = 2;
+                                seconds = 0;
+                            }
+                            if(turno == 3 and naves.at(1)->vidas == 0){
+                                if(progreso == 0){
+                                    reiniciar = 0;
+                                    fin = 1;
+                                    GameOverMulti();
+                                }
+                                else{
+                                    nivel = 4;
+                                }
+                            }
+                            naves.at(1)->setPos(55,400);
+                            naves.at(1)->pos_x = 55;
+                            naves.at(1)->pos_y = 400;
+                        }
                     }
                 }
             }
         }
 
+    }
+    else if(nivel == 4){
+        exit(1);
     }
 }
 

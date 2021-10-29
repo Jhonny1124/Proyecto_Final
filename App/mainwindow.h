@@ -59,7 +59,7 @@ private:
     std::array<QGraphicsEllipseItem *, 10> cometas;
     std::array<miniboss *, 7> mini;
 
-    int turno = 1, progreso = 0, continuar = 0, fin = 0;
+    int turno = 0, progreso = 0, continuar = 0, fin = 0;
 
     int seconds = 0, nivel = 0, indexm = -1, pruebam = 0, cont = 0, nave_index = 0, cambio = 0, reiniciar = 1;
 
