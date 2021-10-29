@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <iostream>
+#include <fstream>
 #include <QTimer>
 #include <QGraphicsScene>
 #include <QPainter>
@@ -12,6 +14,7 @@
 #include <vector>
 #include <list>
 #include <array>
+#include <string>
 #include <QGraphicsRectItem>
 #include <QKeyEvent>
 #include <QRandomGenerator>
@@ -24,6 +27,7 @@
 #include "disparo.h"
 #include "intro.h"
 #include "basura.h"
+#include "menuinicial.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -35,13 +39,19 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
+    int curso = 0;
     ~MainWindow();
+    void Escritura();
+    void Lectura(string &texto);
 
 protected:
     void keyPressEvent(QKeyEvent *e);
 
 private:
     Ui::MainWindow *ui;
+    MenuInicial *menu;
+
+    std::string nombre, contrasena;
 
     std::array< QGraphicsScene *, 3> Niveles;
     std::array< QGraphicsScene *, 4> Escenas;
@@ -58,6 +68,7 @@ private:
     std::array<QGraphicsEllipseItem *, 55> meteoritos;
     std::array<QGraphicsEllipseItem *, 10> cometas;
     std::array<miniboss *, 7> mini;
+
 
     int turno = 0, progreso = 0, continuar = 0, fin = 0;
 

@@ -1,0 +1,6 @@
+alejo,alejo22,2,2,
+antonio,2475,1,1,
+alfredo,das45,3,2,
+hola,1452,1,2,
+prueba,12345,1,1,
+prueba,123456,2,1,

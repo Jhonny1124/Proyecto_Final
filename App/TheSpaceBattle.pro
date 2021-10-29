@@ -16,6 +16,7 @@ SOURCES += \
     laser.cpp \
     main.cpp \
     mainwindow.cpp \
+    menuinicial.cpp \
     miniboss.cpp \
     personaje.cpp
 
@@ -26,11 +27,13 @@ HEADERS += \
     intro.h \
     laser.h \
     mainwindow.h \
+    menuinicial.h \
     miniboss.h \
     personaje.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    menuinicial.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
