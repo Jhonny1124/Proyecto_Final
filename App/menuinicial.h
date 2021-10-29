@@ -2,6 +2,7 @@
 #define MENUINICIAL_H
 
 #include <QMainWindow>
+#include <QGraphicsScene>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -37,9 +38,12 @@ private slots:
 
     void on_CargarPartida_clicked();
 
+    void on_Instrucciones_clicked();
+
 private:
     Ui::MenuInicial *ui;
     QMessageBox msgBox;
+    QGraphicsScene * instrucciones;
 };
 
 #endif // MENUINICIAL_H

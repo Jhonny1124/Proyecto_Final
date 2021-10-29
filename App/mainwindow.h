@@ -56,6 +56,7 @@ private:
     std::array< QGraphicsScene *, 3> Niveles;
     std::array< QGraphicsScene *, 4> Escenas;
     QGraphicsScene * jugador[2];
+    QGraphicsScene * Final;
 
     intro *input;
     personaje *astronauta;

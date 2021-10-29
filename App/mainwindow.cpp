@@ -12,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     jugador[0] = new QGraphicsScene;
     jugador[1] = new QGraphicsScene;
+    Final = new QGraphicsScene;
+    Final->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/Final.png"));
     jugador[0]->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/JUGADOR1.png"));
     jugador[1]->setBackgroundBrush(QImage("../TheSpaceBattle/App/Sprites Personajes/JUGADOR2.png"));
 
@@ -146,6 +148,13 @@ void MainWindow::MovMeteoritos()
                 if(naves.at(0)->vidas == 0 and turno == 0){
                     reiniciar = 0;
                 }
+                if(naves.at(0)->vidas == 0 and turno == 3){
+                    if(progreso == 0){
+                        reiniciar = 0;
+                        fin = 1;
+                        GameOverMulti();
+                    }
+                }
                 ui->lcdNumber->display(naves.at(0)->vidas);
             }
         }
@@ -170,6 +179,13 @@ void MainWindow::MovCometas()
                 naves.at(0)->vidas--;
                 if(naves.at(0)->vidas == 0 and turno == 0){
                     reiniciar = 0;
+                }
+                if(naves.at(0)->vidas == 0 and turno == 3){
+                    if(progreso == 0){
+                        reiniciar = 0;
+                        fin = 1;
+                        GameOverMulti();
+                    }
                 }
                 ui->lcdNumber->display(naves.at(0)->vidas);
             }
@@ -590,9 +606,6 @@ void MainWindow::GameOverMulti()
 
 void MainWindow::conector()
 {
-    if(nivel >= 1){
-        Escritura();
-    }
     if(curso == 0){
         menu->show();
         this->hide();
@@ -769,7 +782,8 @@ void MainWindow::conector()
             }
             if(seconds >= 60500 or naves.at(0)->vidas == 0){
                 if(turno == 3){
-                    progreso++;
+                    if(progreso == 1)
+                        progreso++;
                     if(progreso >= 1){
                         nave_index = 1;
                         cambio = 0;
@@ -954,7 +968,8 @@ void MainWindow::conector()
 
         }
         else if(nivel == 4){
-            exit(1);
+            ui->graphicsView->setScene(Final);
+            ui->graphicsView->show();
         }
     }
 
@@ -1102,6 +1117,7 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
         case Qt::Key_Return:
             if(cambio == 0){
                 nivel++;
+                Escritura();
                 cambio++;
                 seconds = 0;
                 if(turno == 3){
@@ -1116,6 +1132,11 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
             if(reiniciar == 0){
                 reiniciar = 1;
                 cambio = 0;
+            }
+            break;
+        case Qt::Key_T:
+            if(nivel == 4){
+                exit(1);
             }
             break;
         default:
